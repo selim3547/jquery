@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API'ye POST Gönder</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e293b, #4f46e5);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #ffffff;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        #postForm {
+            background: #ffffff;
+            color: #111827;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        #postForm:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #4f46e5;
+            outline: none;
+            box-shadow: 0 0 6px rgba(79, 70, 229, 0.5);
+        }
+
+        textarea {
+            resize: none;
+            height: 120px;
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(90deg, #4f46e5, #6366f1);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #4338ca, #4f46e5);
+            transform: scale(1.03);
+        }
+
+        #response {
+            margin-top: 30px;
+            padding: 20px;
+            background: #1f2937;
+            border-radius: 12px;
+            color: #ffffff;
+            max-width: 500px;
+            width: 100%;
+            text-align: left;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        #response h3 {
+            color: #34d399;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        #response p {
+            color: #d1d5db;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>API'ye Veri Gönder</h1>
+    <form id="postForm">
+        <label for="title">Başlık:</label>
+        <input type="text" id="title" name="title" required><br>
+
+        <label for="body">İçerik:</label>
+        <textarea id="body" name="body" required></textarea><br>
+
+        <button type="submit">Gönder</button>
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        $(document).ready(function () {
+            $("#postForm").submit(function (e) {
+                e.preventDefault(); // Formun varsayılan gönderimini engelle
+
+                // Form verilerini al
+                var title = $("#title").val();
+                var body = $("#body").val();
+
+                // API'ye POST isteği gönder
+                $.ajax({
+                    url: "https://jsonplaceholder.typicode.com/posts",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        title: title,
+                        body: body,
+                        userId: 1 // Örnek olarak bir kullanıcı kimliği
+                    }),
+                    success: function (response) {
+                        $("#response").html(`
+                            <h3>Gönderim Başarılı!</h3>
+                            <p><b>ID:</b> ${response.id}</p>
+                            <p><b>Başlık:</b> ${response.title}</p>
+                            <p><b>İçerik:</b> ${response.body}</p>
+                        `);
+                    },
+                    error: function () {
+                        $("#response").html("<p>Veri gönderilirken bir hata oluştu.</p>");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
